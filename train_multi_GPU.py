@@ -66,7 +66,7 @@ def main(args):
         test_sampler = torch.utils.data.SequentialSampler(val_dataset)
 
     if args.aspect_ratio_group_factor >= 0:
-        # 统计所有图像比例在bins区间中的位置索引
+        
         group_ids = create_aspect_ratio_groups(train_dataset, k=args.aspect_ratio_group_factor)
         train_batch_sampler = GroupedBatchSampler(train_sampler, group_ids, args.batch_size)
     else:
@@ -83,7 +83,7 @@ def main(args):
         collate_fn=train_dataset.collate_fn)
 
     print("Creating model")
-    # create model num_classes equal background + 20 classes
+   
     model = create_model(num_classes=args.num_classes + 1)
     model.to(device)
 
@@ -104,9 +104,8 @@ def main(args):
     # lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.lr_step_size, gamma=args.lr_gamma)
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=args.lr_steps, gamma=args.lr_gamma)
 
-    # 如果传入resume参数，即上次训练的权重地址，则接着上次的参数训练
     if args.resume:
-        checkpoint = torch.load(args.resume, map_location='cpu')  # 读取之前保存的权重文件(包括优化器以及学习率策略)
+        checkpoint = torch.load(args.resume, map_location='cpu')  
         model_without_ddp.load_state_dict(checkpoint['model'])
         optimizer.load_state_dict(checkpoint['optimizer'])
         lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
@@ -140,17 +139,17 @@ def main(args):
         coco_info = utils.evaluate(model, data_loader_test, device=device)
         val_map.append(coco_info[1])  # pascal mAP
 
-        # 只在主进程上进行写操作
+        
         if args.rank in [-1, 0]:
             # write into txt
             with open(results_file, "a") as f:
-                # 写入的数据包括coco指标还有loss和learning rate
+               
                 result_info = [f"{i:.4f}" for i in coco_info + [mean_loss.item()]] + [f"{lr:.6f}"]
                 txt = "epoch:{} {}".format(epoch, '  '.join(result_info))
                 f.write(txt + "\n")
 
         if args.output_dir:
-            # 只在主节点上执行保存权重操作
+            
             save_files = {
                 'model': model_without_ddp.state_dict(),
                 'optimizer': optimizer.state_dict(),
@@ -184,48 +183,48 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__)
 
-    # 训练文件的根目录(VOCdevkit)
+   
     parser.add_argument('--data-path', default='./', help='dataset')
-    # 训练设备类型
+   
     parser.add_argument('--device', default='cuda', help='device')
-    # 检测目标类别数(不包含背景)
+ 
     parser.add_argument('--num-classes', default=20, type=int, help='num_classes')
-    # 每块GPU上的batch_size
+    
     parser.add_argument('-b', '--batch-size', default=4, type=int,
                         help='images per gpu, the total batch size is $NGPU x batch_size')
-    # 指定接着从哪个epoch数开始训练
+  
     parser.add_argument('--start_epoch', default=0, type=int, help='start epoch')
-    # 训练的总epoch数
+   
     parser.add_argument('--epochs', default=20, type=int, metavar='N',
                         help='number of total epochs to run')
-    # 数据加载以及预处理的线程数
+   
     parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                         help='number of data loading workers (default: 4)')
-    # 学习率，这个需要根据gpu的数量以及batch_size进行设置0.02 / 8 * num_GPU
+  
     parser.add_argument('--lr', default=0.02, type=float,
                         help='initial learning rate, 0.02 is the default value for training '
                              'on 8 gpus and 2 images_per_gpu')
-    # SGD的momentum参数
+   
     parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                         help='momentum')
-    # SGD的weight_decay参数
+   
     parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
-    # 针对torch.optim.lr_scheduler.StepLR的参数
+  
     parser.add_argument('--lr-step-size', default=8, type=int, help='decrease lr every step-size epochs')
-    # 针对torch.optim.lr_scheduler.MultiStepLR的参数
+  
     parser.add_argument('--lr-steps', default=[7, 12], nargs='+', type=int, help='decrease lr every step-size epochs')
-    # 针对torch.optim.lr_scheduler.MultiStepLR的参数
+   
     parser.add_argument('--lr-gamma', default=0.1, type=float, help='decrease lr by a factor of lr-gamma')
-    # 训练过程打印信息的频率
+    
     parser.add_argument('--print-freq', default=20, type=int, help='print frequency')
-    # 文件保存地址
+    
     parser.add_argument('--output-dir', default='./multi_train', help='path where to save')
-    # 基于上次的训练结果接着训练
+   
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--aspect-ratio-group-factor', default=3, type=int)
-    # 不训练，仅测试
+    
     parser.add_argument(
         "--test-only",
         dest="test_only",
@@ -233,17 +232,16 @@ if __name__ == "__main__":
         action="store_true",
     )
 
-    # 开启的进程数(注意不是线程)
+   
     parser.add_argument('--world-size', default=4, type=int,
                         help='number of distributed processes')
     parser.add_argument('--dist-url', default='env://', help='url used to set up distributed training')
     parser.add_argument("--sync-bn", dest="sync_bn", help="Use sync batch norm", type=bool, default=False)
-    # 是否使用混合精度训练(需要GPU支持混合精度)
+    
     parser.add_argument("--amp", default=False, help="Use torch.cuda.amp for mixed precision training")
 
     args = parser.parse_args()
 
-    # 如果指定了保存文件地址，检查文件夹是否存在，若不存在，则创建
     if args.output_dir:
         mkdir(args.output_dir)
 
