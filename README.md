@@ -6,7 +6,7 @@ This is a PyTorch implementation of the improved Faster-R-CNN for NEU surface de
 This project uses Contrastive Learning (SimSiam) to pre-train the backbone and preserve high-resolution features through the feature pyramid structure (FPN). In addition, lightweight modules such as shuffleNet and attention modules such as CBAM have also been explored.
 
 # Environment
-The code is developed using python 3.9 on Ubuntu 20.04. NVIDIA GPUs are needed. The code is developed and tested using 1 NVIDIA 3060 cards. Other platforms or GPU cards are not fully tested.
+The code is developed using python 3.9 on Ubuntu 20.04. NVIDIA GPUs are needed. The code is developed and tested using 1 NVIDIA 3060 card. Other platforms or GPU cards are not fully tested.
 
 # Prepare datasets
 It is recommended to symlink the dataset root to `./NEU-DEF`. If your folder structure is different, you may need to change the corresponding paths.
@@ -25,8 +25,13 @@ detection_net
 **For Contrastive Learning**, please download data from Kaggle ([Severstal: Steel Defect Detection](https://www.kaggle.com/c/severstal-steel-defect-detection))
 
 # Usage
-
-##  SimSiam
+##  Train
+### Split data
+```
+python split_data.py --val_rate=0.2 --train_f=train.txt --eval_f=val.txt
+```
+By default, the training set and test set are divided according to 8:2(You can change ratio through `val_rate`), and the names are written into train.txt and val.txt respectively.
+###  SimSiam
 Please refer to an official PyTorch implementation of the [SimSiam](https://github.com/facebookresearch/simsiam) paper
 Using the kaggle dataset, different backbones can be trained.
 **Our pre-trained models are listed here**.
@@ -34,4 +39,4 @@ Using the kaggle dataset, different backbones can be trained.
 | ------ | ------------- |
 | ResNet50| link|
 | lite-HRNet18 | link|
-
+###  Detection_net
