@@ -1,5 +1,5 @@
 # detection_net
-Pre-trained Contrastive and detection for NEU_data
+Unsupervised learning and detection for NEU_data
 # Background
 This is a PyTorch implementation of the improved Faster-R-CNN for NEU surface defect database
 
