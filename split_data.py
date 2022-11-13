@@ -3,7 +3,7 @@ import random
 
 
 def main():
-    random.seed(0)  # 设置随机种子，保证随机结果可复现
+    random.seed(0)
 
     files_path = "./NEU-DEF/Annotations"
     assert os.path.exists(files_path), "path: '{}' does not exist.".format(files_path)
@@ -22,8 +22,8 @@ def main():
             train_files.append(file_name)
 
     try:
-        train_f = open("train_3.txt", "x")
-        eval_f = open("val_3.txt", "x")
+        train_f = open("train.txt", "x")
+        eval_f = open("val.txt", "x")
         train_f.write("\n".join(train_files))
         eval_f.write("\n".join(val_files))
     except FileExistsError as e:

@@ -181,7 +181,6 @@ def main(args):
 
     scaler = torch.cuda.amp.GradScaler() if args.amp else None
 
-    # learning rate scheduler
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
                                                    step_size=10,
                                                    gamma=0.33)
@@ -201,7 +200,6 @@ def main(args):
     val_map = []
 
     for epoch in range(args.start_epoch, args.epochs):
-        # train for one epoch, printing every 10 iterations
         mean_loss, lr = utils.train_one_epoch(model, optimizer, train_data_loader,
                                               device=device, epoch=epoch,
                                               print_freq=50, warmup=True,
@@ -222,9 +220,8 @@ def main(args):
             txt = "epoch:{} {}".format(epoch, '  '.join(result_info))
             f.write(txt + "\n")
 
-        val_map.append(coco_info[1])  # pascal mAP
+        val_map.append(coco_info[1])
 
-        # save weights
         save_files = {
             'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),

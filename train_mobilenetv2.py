@@ -50,10 +50,10 @@ def main():
         "val": transforms.Compose([transforms.ToTensor()])
     }
 
-    VOC_root = "./"  # VOCdevkit
+    VOC_root = "./"
     aspect_ratio_group_factor = 3
     batch_size = 8
-    amp = False  # 是否使用混合精度训练，需要GPU支持
+    amp = False
 
     # check voc root
     if os.path.exists(os.path.join(VOC_root, "VOCdevkit")) is False:

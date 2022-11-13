@@ -75,7 +75,7 @@ class NEU_DataSet(Dataset):
             ymin = float(obj["bndbox"]["ymin"])
             ymax = float(obj["bndbox"]["ymax"])
 
-            # 进一步检查数据，有的标注信息中可能有w或h为0的情况，这样的数据会导致计算回归loss为nan
+
             if xmax <= xmin or ymax <= ymin:
                 print("Warning: in '{}' xml, there are some bbox w/h <=0".format(xml_path))
                 continue
@@ -106,7 +106,7 @@ class NEU_DataSet(Dataset):
         return image, target
 
     def get_height_and_width(self, idx):
-        # read xml
+
         xml_path = self.xml_list[idx]
         with open(xml_path) as fid:
             xml_str = fid.read()

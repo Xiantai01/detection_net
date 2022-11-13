@@ -8,7 +8,6 @@ from lxml import etree
 
 
 class VOCDataSet(Dataset):
-    """读取解析PASCAL VOC2007/2012数据集"""
 
     def __init__(self, voc_root, year="2012", transforms=None, txt_name: str = "train.txt"):
         assert year in ["2007", "2012"], "year must be in ['2007', '2012']"
@@ -48,7 +47,6 @@ class VOCDataSet(Dataset):
 
         assert len(self.xml_list) > 0, "in '{}' file does not find any information.".format(txt_path)
 
-        # read class_indict
         json_file = './pascal_voc_classes.json'
         assert os.path.exists(json_file), "{} file not exist.".format(json_file)
         with open(json_file, 'r') as f:
@@ -81,7 +79,6 @@ class VOCDataSet(Dataset):
             ymin = float(obj["bndbox"]["ymin"])
             ymax = float(obj["bndbox"]["ymax"])
 
-            # 进一步检查数据，有的标注信息中可能有w或h为0的情况，这样的数据会导致计算回归loss为nan
             if xmax <= xmin or ymax <= ymin:
                 print("Warning: in '{}' xml, there are some bbox w/h <=0".format(xml_path))
                 continue
@@ -93,7 +90,6 @@ class VOCDataSet(Dataset):
             else:
                 iscrowd.append(0)
 
-        # convert everything into a torch.Tensor
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
         labels = torch.as_tensor(labels, dtype=torch.int64)
         iscrowd = torch.as_tensor(iscrowd, dtype=torch.int64)
@@ -124,14 +120,7 @@ class VOCDataSet(Dataset):
         return data_height, data_width
 
     def parse_xml_to_dict(self, xml):
-        """
-        将xml文件解析成字典形式，参考tensorflow的recursive_parse_xml_to_dict
-        Args:
-            xml: xml tree obtained by parsing XML file contents using lxml.etree
 
-        Returns:
-            Python dictionary holding XML contents.
-        """
 
         if len(xml) == 0:  # 遍历到底层，直接返回tag对应的信息
             return {xml.tag: xml.text}
@@ -148,13 +137,7 @@ class VOCDataSet(Dataset):
         return {xml.tag: result}
 
     def coco_index(self, idx):
-        """
-        该方法是专门为pycocotools统计标签信息准备，不对图像和标签作任何处理
-        由于不用去读取图片，可大幅缩减统计时间
 
-        Args:
-            idx: 输入需要获取图像的索引
-        """
         # read xml
         xml_path = self.xml_list[idx]
         with open(xml_path) as fid:

@@ -3,7 +3,7 @@ from backbone.Simsiam import SimSiam
 import torch
 import torch.nn as nn
 from torchvision.ops.misc import FrozenBatchNorm2d
-
+import warnings
 from backbone.feature_pyramid_network import BackboneWithFPN, LastLevelMaxPool
 import math
 # try:
@@ -57,6 +57,117 @@ class CBAM(nn.Module):
         out = self.spatial_attention(out) * out
         return out
 
+def channel_shuffle(x, groups):
+    batch_size, num_channels, height, width = x.size()
+    channels_per_group = num_channels // groups
+
+    # reshape
+    # b, c, h, w =======>  b, g, c_per, h, w
+    x = x.view(batch_size, groups, channels_per_group, height, width)
+    x = torch.transpose(x, 1, 2).contiguous()
+    # flatten
+    x = x.view(batch_size, -1, height, width)
+    return x
+
+class SpatialWeighting(nn.Module):
+
+    def __init__(self,
+                 channels,
+                 ratio=16,
+                 conv_cfg=None,
+                 act_cfg=(dict(type='ReLU'), dict(type='Sigmoid'))):
+        super().__init__()
+        if isinstance(act_cfg, dict):
+            act_cfg = (act_cfg, act_cfg)
+        assert len(act_cfg) == 2
+        self.global_avgpool = nn.AdaptiveAvgPool2d(1)
+        self.conv1 = ConvModule(
+            in_channels=channels,
+            out_channels=int(channels / ratio),
+            kernel_size=1,
+            stride=1,
+            conv_cfg=conv_cfg,
+            act_cfg=act_cfg[0])
+        self.conv2 = ConvModule(
+            in_channels=int(channels / ratio),
+            out_channels=channels,
+            kernel_size=1,
+            stride=1,
+            conv_cfg=conv_cfg,
+            act_cfg=act_cfg[1])
+
+    def forward(self, x):
+        out = self.global_avgpool(x)
+        out = self.conv1(out)
+        out = self.conv2(out)
+        return x * out
+
+class ConvModule(nn.Module):
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 kernel_size,
+                 stride=1,
+                 padding=0,
+                 dilation=1,
+                 groups=1,
+                 bias='auto',
+                 conv_cfg=None,
+                 norm_cfg=None,
+                 act_cfg=dict(type='ReLU'),
+                 inplace=True,
+                 with_spectral_norm=False,
+                 padding_mode='zeros',
+                 order=('conv', 'norm', 'act')):
+        super(ConvModule, self).__init__()
+        official_padding_mode = ['zeros', 'circular']
+        self.conv_cfg = conv_cfg
+        self.norm_cfg = norm_cfg
+        self.act_cfg = act_cfg
+        self.inplace = inplace
+        self.with_spectral_norm = with_spectral_norm
+        self.with_explicit_padding = padding_mode not in official_padding_mode
+        self.order = order
+        self.with_norm = norm_cfg is not None
+        self.with_activation = act_cfg is not None
+        # if the conv layer is before a norm layer, bias is unnecessary.
+        if bias == 'auto':
+            bias = not self.with_norm
+        self.with_bias = bias
+
+        if self.with_norm and self.with_bias:
+            warnings.warn('ConvModule has norm and bias at the same time')
+        conv_padding = 0 if self.with_explicit_padding else padding
+
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, conv_padding, dilation, groups, bias)
+        if order.index('norm') > order.index('conv'):
+            norm_channels = out_channels
+        else:
+            norm_channels = in_channels
+        self.norm = nn.BatchNorm2d(norm_channels)
+        self.act = nn.ReLU(True)
+        self.init_weights()
+
+    def init_weights(self):
+        if not hasattr(self.conv, 'init_weights'):
+            if self.with_activation and self.act_cfg['type'] == 'LeakyReLU':
+                nonlinearity = 'leaky_relu'
+                a = self.act_cfg.get('negative_slope', 0.01)
+            else:
+                nonlinearity = 'relu'
+                a = 0
+            nn.init.kaiming_normal_(self.conv.weight, a=a, nonlinearity=nonlinearity)
+        if self.with_norm:
+            if hasattr(self.norm, 'weight') and self.norm.weight is not None:
+                nn.init.constant_(self.norm.weight, 1)
+            if hasattr(self.norm, 'bias') and self.norm.bias is not None:
+                nn.init.constant_(self.norm.bias, 0)
+
+    def forward(self, x, activate=True, norm=True):
+        x = self.conv(x)
+        x = self.norm(x)
+        x = self.act(x)
+        return x
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -199,20 +310,7 @@ def backbone_fpn(pretrain_path="",
                           returned_layers=None,
                           extra_blocks=None,
                           Simsiam=True):
-    """
-    搭建resnet50_fpn——backbone
-    Args:
-        pretrain_path: resnet50的预训练权重，如果不使用就默认为空
-        norm_layer: 官方默认的是FrozenBatchNorm2d，即不会更新参数的bn层(因为如果batch_size设置的很小会导致效果更差，还不如不用bn层)
-                    如果自己的GPU显存很大可以设置很大的batch_size，那么自己可以传入正常的BatchNorm2d层
-                    (https://github.com/facebookresearch/maskrcnn-benchmark/issues/267)
-        trainable_layers: 指定训练哪些层结构
-        returned_layers: 指定哪些层的输出需要返回
-        extra_blocks: 在输出的特征层基础上额外添加的层结构
 
-    Returns:
-
-    """
     resnet_backbone = ResNet(Bottleneck, [3, 4, 6, 3],
                              include_top=False,
                              norm_layer=norm_layer)

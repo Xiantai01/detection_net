@@ -33,7 +33,7 @@ class RandomHorizontalFlip(object):
             image = image.flip(-1)
             bbox = target["boxes"]
 
-            bbox[:, [0, 2]] = width - bbox[:, [2, 0]]  # 翻转对应bbox坐标信息
+            bbox[:, [0, 2]] = width - bbox[:, [2, 0]]
             target["boxes"] = bbox
         return image, target
 
@@ -45,7 +45,7 @@ class RandomVerticalFlip(object):
     def __call__(self, image, target):
         if random.random() < self.prob:
             height, width = image.shape[-2:]
-            image = image.flip(1)  # 竖直翻转图片
+            image = image.flip(1)
             bbox = target["boxes"]
             bbox[:, [1, 3]] = height - bbox[:, [3, 1]]
             target["boxes"] = bbox
@@ -61,8 +61,7 @@ class RandomGrayscale(object):
         if random.random() < self.p:
             F.rgb_to_grayscale(image, num_output_channels=num_output_channels)
         return image, target
-#
-#
+
 class add_gasuss_noise(object):
     def __init__(self, mean=0, std=0.1):
         self.mean = mean

@@ -1,6 +1,8 @@
 from torch import nn
 from .resnet_model import ResNet18, ResNet34, ResNet101, ResNet50, ResNet18_backbone, ResNet50_backbone
 from .model_hrnet import LiteHRNet
+
+
 class projection_MLP(nn.Module):
     def __init__(self, in_dim, out_dim, num_layers=2):
         super().__init__()
