@@ -48,7 +48,6 @@ Using the kaggle dataset, different backbones can be trained.
 | Lite-HRNet18 | link|
 ###  Detection_net
 
-#### Train
 ```python
 python defectpyramid_train.py --device cuda:0 --data-path ./NEU-DEF --num-classes 6 --epochs 35 --batch_size 16
 ```
@@ -72,7 +71,7 @@ detection_net
 ├── defectpyramid_train.py
 ```
 
-#### Test
+## Test
 
 ```
 python predict.py
