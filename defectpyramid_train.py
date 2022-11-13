@@ -178,9 +178,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=__doc__)
-    parser.add_argument('--device', default='cuda:0', help='device')
+    parser.add_argument('--device', default='cuda:0', help='device', type=str)
 
-    parser.add_argument('--data-path', default='./NEU-DEF', help='dataset')
+    parser.add_argument('--data-path', default='./NEU-DEF', help='dataset', type=str)
 
     parser.add_argument('--num-classes', default=6, type=int, help='num_classes')
 

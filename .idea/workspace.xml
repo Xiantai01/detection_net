@@ -11,23 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f4048370-380c-48fd-ab79-c2e1766be1bf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Xiantai_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Xiantai_dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backbone/Simsiam.py" beforeDir="false" afterPath="$PROJECT_DIR$/backbone/Simsiam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backbone/fpn_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/backbone/fpn_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backbone/resnet_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/backbone/resnet_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backbone_fpn.py" beforeDir="false" afterPath="$PROJECT_DIR$/backbone_fpn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deal_txt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/defect_dataset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_curve.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_curve.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/split_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_mobilenetv2.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_mobilenetv2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_mynetwork.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/transforms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/val_1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defectpyramid_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/defectpyramid_train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -325,6 +311,9 @@
       <workItem from="1668220879823" duration="468000" />
       <workItem from="1668221395325" duration="76000" />
       <workItem from="1668305141309" duration="910000" />
+      <workItem from="1668316498682" duration="625000" />
+      <workItem from="1668317703033" duration="1676000" />
+      <workItem from="1668320204048" duration="1342000" />
     </task>
     <servers />
   </component>
@@ -360,10 +349,10 @@
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
     <state x="553" y="101" key="#split_data/0.0.1707.1019@0.0.1707.1019" timestamp="1668305215242" />
-    <state x="634" y="265" key="FileChooserDialogImpl" timestamp="1668305155646">
+    <state x="634" y="265" key="FileChooserDialogImpl" timestamp="1668320212134">
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
-    <state x="634" y="265" key="FileChooserDialogImpl/0.0.1707.1019@0.0.1707.1019" timestamp="1668305155646" />
+    <state x="634" y="265" key="FileChooserDialogImpl/0.0.1707.1019@0.0.1707.1019" timestamp="1668320212134" />
     <state width="1663" height="193" key="GridCell.Tab.0.bottom" timestamp="1668306054264">
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
@@ -396,10 +385,10 @@
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
     <state width="1663" height="304" key="GridCell.Tab.1.right/0.0.1707.1019@0.0.1707.1019" timestamp="1668134647158" />
-    <state x="355" y="154" key="SettingsEditor" timestamp="1668305157155">
+    <state x="355" y="154" key="SettingsEditor" timestamp="1668320213713">
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
-    <state x="355" y="154" key="SettingsEditor/0.0.1707.1019@0.0.1707.1019" timestamp="1668305157155" />
+    <state x="355" y="154" key="SettingsEditor/0.0.1707.1019@0.0.1707.1019" timestamp="1668320213713" />
     <state x="401" y="239" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1668067446679">
       <screen x="0" y="0" width="1707" height="1019" />
     </state>
