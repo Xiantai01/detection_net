@@ -44,8 +44,10 @@ Using the kaggle dataset, different backbones can be trained.
 
 | backbone| pre-train ckpt|
 | ------ | ------------- |
-| ResNet50| link|
-| Lite-HRNet18 | link|
+| ResNet50| [link]|
+| Lite-HRNet18 | [link]|
+| VGG16| [link]|
+|MobileNetv2|[link]|
 ###  Detection_net
 
 ```python
