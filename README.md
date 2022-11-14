@@ -38,8 +38,9 @@ By default, the training set and test set are divided according to 8:2(You can c
 
 ###  SimSiam
 
-Please refer to an official PyTorch implementation of the [SimSiam](https://github.com/facebookresearch/simsiam) paper
+Please refer to an official PyTorch implementation of the [SimSiam](https://github.com/facebookresearch/simsiam) paper.
 Using the kaggle dataset, different backbones can be trained.
+
 **Our pre-trained models are listed here**.
 
 | backbone| pre-train ckpt|
