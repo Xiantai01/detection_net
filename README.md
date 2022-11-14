@@ -57,7 +57,7 @@ python defectpyramid_train.py --device cuda:0 --data-path ./NEU-DEF --num-classe
 
 For better performance, you can download our pre-trained backbone, e.g. our ResNet50 and Lite-HRNet18. 
 
-For further improvement, you can also download pre-trained **RPN** weights, e.g. [fasterrcnn_resnet50_fpn_coco.pth](*https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth*).
+For further improvement, you can also download pre-trained **RPN** weights, e.g. [fasterrcnn_resnet50_fpn_coco.pth](https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth).
 
 Don't forget to put them in the `backbone` folder and change the corresponding paths in `defectpyramid_train.py`.
 
