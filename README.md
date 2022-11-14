@@ -55,7 +55,7 @@ Using the kaggle dataset, different backbones can be trained.
 python defectpyramid_train.py --device cuda:0 --data-path ./NEU-DEF --num-classes 6 --epochs 35 --batch_size 16
 ```
 
-For better performance, You can download our pre-trained backbone, e.g. our ResNet50 and Lite-HRNet18. 
+For better performance, you can download our pre-trained backbone, e.g. our ResNet50 and Lite-HRNet18. 
 
 For further improvement, you can also download pre-trained **RPN** weights, e.g. [fasterrcnn_resnet50_fpn_coco.pth](*https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth*).
 
